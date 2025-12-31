@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&family=Playwrite+IN&display=swap');
+@import "tailwindcss";
+
+@theme{
+  --color-primary: #F84565;
+  --color-primary-dull: #D63854;
+}
+
+*{
+  font-family: "Outfit", sans-serif;
+  scrollbar-width: thin;
+  scrollbar-color: #787777 #1e1e1e;
+}
+
+body{
+  color: white;
+  background-color: black;
+}
+
+.nav-link {
+  color: #aaa;
+  transition: 0.2s;
+}
+
+.nav-link.active {
+  color: var(--color-primary);
+  font-weight: 600;
+  border-bottom: 2px solid var(--color-primary);
+}
+
+.no-scrollbar{
+  scrollbar-width: none; /* Firefox */
+}
+
+/* for entering price in updown button in addshows */
+/* input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+} */
+
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
