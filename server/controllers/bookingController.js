@@ -1,5 +1,6 @@
 import Show from '../models/Show.js'
 import Booking from '../models/Booking.js'
+import stripe from 'stripe'
 
 
 // Function to check seat availability for a specific show
@@ -51,35 +52,35 @@ export const createBooking = async(req,res)=>{
         await showData.save();
 
         // Stripe payment integration can be added here
-        // const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
-        // // creating line items for the payment
-        // const line_items = [{
-        //     price_data: {
-        //         currency: 'usd',
-        //         product_data: {
-        //             name: showData.movie.title
-        //         },
-        //         unit_amount: Math.floor(booking.amount)*100
-        //     },
-        //     quantity: 1,
-        // }]
+        const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
+        // creating line items for the payment
+        const line_items = [{
+            price_data: {
+                currency: 'usd',
+                product_data: {
+                    name: showData.movie.title
+                },
+                unit_amount: Math.floor(booking.amount)*100
+            },
+            quantity: 1,
+        }]
 
-        // const session = await stripeInstance.checkout.sessions.create({
-        //     success_url: `${origin}/loading/my-bookings`,
-        //     cancel_url:`${origin}/my-bookings`,
-        //     line_items: line_items,
-        //     mode: 'payment',
-        //     metadata:{
-        //         bookingId: booking._id.toString(),
-        //     },
-        //     expires_at: Math.floor(Date.now()/1000)+30*60 // session expires in 30 minutes  
-        // })
-        // booking.paymentLink = session.url;
-        // await booking.save();
+        const session = await stripeInstance.checkout.sessions.create({
+            success_url: `${origin}/loading/my-bookings`,
+            cancel_url:`${origin}/my-bookings`,
+            line_items: line_items,
+            mode: 'payment',
+            metadata:{
+                bookingId: booking._id.toString(),
+            },
+            expires_at: Math.floor(Date.now()/1000)+30*60 // session expires in 30 minutes  
+        })
+        booking.paymentLink = session.url;
+        await booking.save();
 
-        // res.json({success: true, url: session.url});
+        res.json({success: true, url: session.url});
 
-        res.json({success: true, message:'Booked successfully'})
+        // res.json({success: true,  message:'Booked successfully'})
     } catch (error) {
         console.log(error.message);
         res.json({success: false, message: error.message});
