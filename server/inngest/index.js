@@ -278,7 +278,7 @@ const sendNewShowNotifications = inngest.createFunction(
 
             <!-- <p>Visit our website</p> -->
             <p>
-                <a href="https://yourfrontendurl.com" 
+                <a href="https://cinebook-zeta.vercel.app/" 
                     style="background:#F84565;color:white;padding:10px 16px;
                             text-decoration:none;border-radius:6px;">
                     View Show
@@ -288,7 +288,7 @@ const sendNewShowNotifications = inngest.createFunction(
 
             <br/>
 
-            <p>Thanks,<br/>QuickShow Team</p>
+            <p>Thanks,<br/>CineBook Team</p>
 
             </div>
         `;
