@@ -68,19 +68,44 @@ export const addShow = async (req, res) => {
 
         }
 
+        // const showsToCreate = [];
+        // showsInput.forEach(showInput => {
+        //     const showDate = showInput.date;
+        //     showInput.time.forEach(time => {
+        //         const dateTimeString = `${showDate}T${time}`;
+        //         showsToCreate.push({
+        //             movie: movieId,
+        //             showDateTime: new Date(dateTimeString),
+        //             showPrice,
+        //             occupiedSeats: {}
+        //         });
+        //     });
+        // });
+
         const showsToCreate = [];
-        showsInput.forEach(showInput => {
-            const showDate = showInput.date;
-            showInput.time.forEach(time => {
-                const dateTimeString = `${showDate}T${time}`;
-                showsToCreate.push({
-                    movie: movieId,
-                    showDateTime: new Date(dateTimeString),
-                    showPrice,
-                    occupiedSeats: {}
-                });
-            });
+
+    for (const showInput of showsInput) {
+      const showDate = showInput.date;
+
+      for (const time of showInput.time) {
+        const showDateTime = new Date(`${showDate}T${time}`);
+
+        // Check if same show already exists
+        const exists = await Show.findOne({
+          movie: movieId,
+          showDateTime
         });
+
+        if (!exists) {
+          showsToCreate.push({
+            movie: movieId,
+            showDateTime,
+            showPrice,
+            occupiedSeats: {}
+          });
+        }
+      }
+    }
 
         if(showsToCreate.length > 0){
             await Show.insertMany(showsToCreate);
@@ -93,7 +118,14 @@ export const addShow = async (req, res) => {
         })
 
         
-        res.json({success: true, message: 'Shows added successfully'});
+        // res.json({success: true, message: 'Shows added successfully'});
+
+        res.json({
+            success: true,
+            message: showsToCreate.length > 0
+                ? "Shows added successfully"
+                : "No new shows added (duplicate timings skipped)"
+        });
         
     } catch (error) {
         console.error(error);
