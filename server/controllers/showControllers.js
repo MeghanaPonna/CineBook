@@ -107,9 +107,23 @@ export const addShow = async (req, res) => {
       }
     }
 
-        if(showsToCreate.length > 0){
-            await Show.insertMany(showsToCreate);
-        }
+        // if(showsToCreate.length > 0){
+        //     await Show.insertMany(showsToCreate);
+        // }
+
+        if (showsToCreate.length > 0) {
+  try {
+    await Show.insertMany(showsToCreate, { ordered: false });
+
+  } catch (err) {
+
+    // Duplicate key error — safe to ignore
+    if (err.code !== 11000) {
+      throw err;
+    }
+  }
+}
+
 
         //  Trigger inngest event
         await inngest.send({
